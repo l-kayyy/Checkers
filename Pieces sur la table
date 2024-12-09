@@ -1,0 +1,189 @@
+#include <stdio.h>
+
+#define TAILLE 17 // Dimensions de la matrice (17x17)
+#define TAILLE_MAX 18 // pour afficher les lettres qui font les indices pour le joueur
+
+// Codes ANSI pour les couleurs
+#define RESET "\033[0m"        // Réinitialisation des styles
+#define FOND_CYAN "\033[46m"   // Fond cyan
+#define FOND_NOIR "\033[40m"   // Fond noir
+#define FOND_BLANC "\033[47m"  // Fond blanc
+#define TXT_BLEU "\033[34m"    // Texte bleu
+#define PIECE_BLEUE "\033[34m●"  // Pièce bleue (texte bleu)
+#define PIECE_ROUGE "\033[31m●"  // Pièce rouge (texte rouge)
+#define PIECE_JAUNE "\033[33m●"  // Pièce jaune (texte jaune)
+#define PIECE_VERTE "\033[32m●"  // Pièce verte (texte vert)
+
+// Board state to track pieces (0: empty, 1: blue, 2: red, 3: yellow, 4: green)
+int board[TAILLE][TAILLE] = {0};
+
+/*
+ * Vérifie si une cellule appartient à l'un des 4 coins cyans de la matrice qui sont non affectables.
+ */
+int Coin_Cyan(int i, int j) {
+    return ((i >= 0 && i <= 3 && j >= 0 && j <= 3) ||         // Coin supérieur gauche
+            (i >= 13 && i < TAILLE && j >= 0 && j <= 3) ||    // Coin inférieur gauche
+            (i >= 0 && i <= 3 && j >= 13 && j < TAILLE) ||    // Coin supérieur droit
+            (i >= 13 && i < TAILLE && j >= 13 && j < TAILLE)); // Coin inférieur droit
+}
+
+/*
+ * Place a piece on the board for a given player.
+ */
+void placer_Piece(int x, int y, int joueur) {
+    if (x >= 0 && x < TAILLE && y >= 0 && y < TAILLE && !Coin_Cyan(x, y)) {
+        board[x][y] = joueur;
+    } else {
+        printf("Position invalide ou case non affectable!\n");
+    }
+}
+
+/*
+ * Affiche une cellule selon sa position et son contenu.
+ */
+void afficher_Cellule(int i, int j) {
+    if (j == 17) {
+        if (i < 17) {
+            char LETTER = 'A' + i;
+            printf("%s%c%s", TXT_BLEU, LETTER, RESET);
+        }
+    } else if (i == 17) {
+        char letter = 'a' + j;
+        printf("%s%c %s", TXT_BLEU, letter, RESET);
+    } else if (Coin_Cyan(i, j)) {
+        printf(FOND_CYAN "  " RESET);
+    } else {
+        // Determine background color
+        const char *background = ((i + j) % 2 == 0) ? FOND_BLANC : FOND_NOIR;
+
+        // Draw piece or empty cell
+        switch (board[i][j]) {
+            case 1: printf("%s %s %s", background, PIECE_BLEUE, RESET); break; // Player 1: Blue piece
+            case 2: printf("%s %s %s", background, PIECE_ROUGE, RESET); break; // Player 2: Red piece
+            case 3: printf("%s %s %s", background, PIECE_JAUNE, RESET); break; // Player 3: Yellow piece
+            case 4: printf("%s %s %s", background, PIECE_VERTE, RESET); break; // Player 4: Green piece
+            default:
+                printf("%s  %s", background, RESET); // Empty cell
+        }
+    }
+}
+
+/*
+ * Affiche la matrice complète avec les pièces.
+ */
+void afficher_Matrice() {
+    for (int i = 0; i < TAILLE + 1; i++) {
+        for (int j = 0; j < TAILLE + 1; j++) {
+            afficher_Cellule(i, j);
+        }
+        printf("\n");
+    }
+}
+
+/*
+ * Point d'entrée principal.
+ */
+int main() {
+    printf("Matrice alternée (damier blanc/noir) avec coins cyans et pièces colorées :\n\n");
+
+    // Placer les pieces en bleu
+    placer_Piece(0, 5, 1); // Placer une piece bleue sur (0,5)
+    placer_Piece(0, 7, 1); 
+    placer_Piece(0, 9, 1);
+    placer_Piece(0, 11, 1);
+    placer_Piece(1, 4, 1);
+    placer_Piece(1, 6, 1);
+    placer_Piece(1, 8, 1);
+    placer_Piece(1, 10, 1);
+    placer_Piece(1, 12, 1);
+    placer_Piece(2, 5, 1);
+    placer_Piece(2, 7, 1);
+    placer_Piece(2, 9, 1);
+    placer_Piece(2, 11, 1);
+    placer_Piece(3, 4, 1);
+    placer_Piece(3, 6, 1);
+    placer_Piece(3, 8, 1);
+    placer_Piece(3, 10, 1);
+    placer_Piece(3, 12, 1);
+    placer_Piece(4, 5, 1);
+    placer_Piece(4, 7, 1);
+    placer_Piece(4, 9, 1);
+    placer_Piece(4, 11, 1);
+
+    // Placer les pieces en rouge
+    placer_Piece(12,11,2);
+    placer_Piece(12,9,2);
+    placer_Piece(12,7,2);
+    placer_Piece(12,5,2);
+    placer_Piece(13,12,2);
+    placer_Piece(13,10,2);
+    placer_Piece(13,8,2);
+    placer_Piece(13,6,2);
+    placer_Piece(13,4,2);
+    placer_Piece(14,11,2);
+    placer_Piece(14,9,2);
+    placer_Piece(14,7,2);
+    placer_Piece(14,5,2);
+    placer_Piece(15,12,2);
+    placer_Piece(15,10,2);
+    placer_Piece(15,8,2);
+    placer_Piece(15,6,2);
+    placer_Piece(15,4,2);
+    placer_Piece(16, 11, 2);
+    placer_Piece(16, 9, 2);
+    placer_Piece(16, 7, 2);
+    placer_Piece(16, 5, 2);
+
+    // Placer les pieces en jaune
+    placer_Piece(5, 16, 3);
+    placer_Piece(7, 16, 3);
+    placer_Piece(9, 16, 3);
+    placer_Piece(11, 16, 3);
+    placer_Piece(4, 15, 3);
+    placer_Piece(6, 15, 3);
+    placer_Piece(8, 15, 3);
+    placer_Piece(10, 15, 3);
+    placer_Piece(12, 15, 3);
+    placer_Piece(5, 14, 3);
+    placer_Piece(7, 14, 3);
+    placer_Piece(9, 14, 3);
+    placer_Piece(11, 14, 3);
+    placer_Piece(4, 13, 3);
+    placer_Piece(6, 13, 3);
+    placer_Piece(8, 13, 3);
+    placer_Piece(10, 13, 3);
+    placer_Piece(12, 13, 3);
+    placer_Piece(5, 12, 3);
+    placer_Piece(7, 12, 3);
+    placer_Piece(9, 12, 3);
+    placer_Piece(11, 12, 3);
+    
+    // Placer les pieces en vert
+    placer_Piece(5, 0, 4);
+    placer_Piece(7, 0, 4);
+    placer_Piece(9, 0, 4);
+    placer_Piece(11, 0, 4);
+    placer_Piece(4, 1, 4);
+    placer_Piece(6, 1, 4);
+    placer_Piece(8, 1, 4);
+    placer_Piece(10, 1, 4);
+    placer_Piece(12, 1, 4);
+    placer_Piece(5, 2, 4);
+    placer_Piece(7, 2, 4);
+    placer_Piece(9, 2, 4);
+    placer_Piece(11, 2, 4);
+    placer_Piece(4, 3, 4);
+    placer_Piece(6, 3, 4);
+    placer_Piece(8, 3, 4);
+    placer_Piece(10, 3, 4);
+    placer_Piece(12, 3, 4);
+    placer_Piece(5, 4, 4);
+    placer_Piece(7, 4, 4);
+    placer_Piece(9, 4, 4);
+    placer_Piece(11, 4, 4);
+
+    // Display the board
+    afficher_Matrice();
+
+    return 0;
+}
