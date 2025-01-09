@@ -1,0 +1,23 @@
+void sauvegarde_jeu(Damier* jeu, const char* nom_fichier) {
+    FILE* fichier = fopen(nom_fichier, "w"); // Pour ouvrir le fichier dans le mode écriture
+    if (fichier == NULL) {
+        printf("Erreur lors de l'ouverture du fichier \n");
+        return;
+    }
+
+    // On sauvegarde le nombre des pions dans chaque case
+    fprintf(fichier, "%d %d %d %d\n", jeu->nb_bleu, jeu->nb_rouge, jeu->nb_jaune, jeu->nb_vert);
+
+    // Sauvegarde de l'état du plateau
+    for (int i = 0; i < TAILLE; i++) {
+        for (int j = 0; j < TAILLE; j++) {
+            fprintf(fichier, "%d ", jeu->index[i][j]);
+        }
+        fprintf(fichier, "\n");
+    }
+
+    fclose(fichier); // Pour fermer le fichier
+    printf("Jeu sauvegardé\n");
+}
+
+// On profite de la fonction d'affichage pour reafficher le Damier
